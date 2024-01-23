@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="bootstrap/bootstrap.min.css">
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+        crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"
+        crossorigin="anonymous"></script>
+    <title>Frontend Responsivo</title>
+    <style>
+        .ml-login {
+            margin-left: 10px;
+            margin-right: 10px;
+        }
+
+        .search-bar {
+            flex-grow: 2;
+        }
+
+        #posts-container {
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .post-card {
+            cursor: pointer;
+        }
+
+        .create-post-btn {
+            margin-top: 10px;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+            aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="index.html">Home</a>
+                </li>
+            </ul>
+            <form id="search-form" class="form-inline my-2 my-lg-0 d-flex">
+                <input id="search-input" class="form-control mr-sm-2 search-bar" type="search" placeholder="Search"
+                    aria-label="Search">
+                <button id="search-button" class="btn btn-outline-success my-2 my-sm-0 ml-login"
+                    type="button">Search</button>
+            </form>
+        </div>
+    </nav>
+
+    <div class="container mt-4">
+        <h2 class="text-center">Posts</h2>
+        <!-- Botão "Create Post" adicionado aqui -->
+        <button class="btn btn-primary create-post-btn" onclick="redirectToCreatePost()">Create Anonymous Post</button>
+        <div id="posts-container" class="mx-auto"></div>
+    </div>
+
+    <script>
+        const apiUrl = 'https://api-lxwa.onrender.com/posts';
+        function renderPosts(posts) {
+            const postsContainer = document.getElementById('posts-container');
+            postsContainer.innerHTML = '';
+
+            posts.forEach(post => {
+                const postElement = document.createElement('div');
+                postElement.classList.add('card', 'mt-2', 'post-card');
+                postElement.innerHTML = `
+                    <div class="card-body">
+                        <h5 class="card-title">${post.title}</h5>
+                        <p class="card-text">${post.body}</p>
+                    </div>
+                `;
+
+                postElement.addEventListener('click', () => {
+                    window.location.href = `post.html?id=${post.id}`;
+                });
+
+                postsContainer.appendChild(postElement);
+            });
+        }
+
+        function handleSearch() {
+            const searchInput = document.getElementById('search-input');
+            const searchText = searchInput.value.trim();
+
+            if (searchText !== '') {
+                const searchUrl = `https://api-lxwa.onrender.com/posts/titlesearch?text=${encodeURIComponent(searchText)}`;
+
+                fetch(searchUrl)
+                    .then(response => response.json())
+                    .then(posts => {
+                        renderPosts(posts);
+                    })
+                    .catch(error => console.error('Error to get search results:', error));
+            }
+        }
+
+        const searchButton = document.getElementById('search-button');
+        searchButton.addEventListener('click', handleSearch);
+
+        fetch(apiUrl)
+            .then(response => response.json())
+            .then(posts => {
+                renderPosts(posts);
+            })
+            .catch(error => console.error('Error to get posts:', error));
+
+        function redirectToCreatePost() {
+            window.location.href = 'createPost.html';
+        }
+    </script>
+    <footer class="mt-4 text-center">
+        <p>Esta aplicação tem finalidade de testar algumas funcionalidades e rotas da ApiRest disponível em
+            <a href="https://github.com/gabribn/API-Restful" target="_blank">GitHub</a>.
+        </p>
+    </footer>
+</body>
+
+</html>

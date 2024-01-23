@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="bootstrap/bootstrap.min.css">
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+        crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"
+        crossorigin="anonymous"></script>
+    <title>Post Detail</title>
+    <style>
+        .card-body {
+            padding: 1.25rem;
+        }
+
+        #post-container,
+        #comments-container {
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .text-left {
+            text-align: left;
+        }
+
+        h3 {
+            font-size: 1.5rem;
+            /* Ajuste o valor conforme necessário */
+        }
+
+        .small-text {
+            font-size: 0.8rem;
+            color: #777;
+            /* Cor do texto do autor do comentário */
+        }
+    </style>
+</head>
+
+<body>
+
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+            aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="index.html">Home</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container mt-4">
+        <h2 class="text-left">Post</h2>
+        <div id="post-container" class="mx-auto"></div>
+        <h3 class="text-left mt-4">Comments:</h3>
+        <div id="comments-container" class="mx-auto"></div>
+    </div>
+
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        const postId = urlParams.get('id');
+        const postUrl = `https://api-lxwa.onrender.com/posts/${postId}`;
+
+        fetch(postUrl)
+            .then(response => response.json())
+            .then(post => {
+                const postContainer = document.getElementById('post-container');
+                const postElement = document.createElement('div');
+                postElement.classList.add('card', 'mt-2', 'small-text');
+                postElement.innerHTML = `
+                    <div class="card-body">
+                        <p class="small-text">Author: ${post.author.name}</p>
+                        <h5 class="card-title text-dark">${post.title}</h5>
+                        <p class="card-text">${post.body}</p>
+                    </div>
+                `;
+                postContainer.appendChild(postElement);
+
+                const commentsContainer = document.getElementById('comments-container');
+                post.comments.forEach(comment => {
+                    const commentElement = document.createElement('div');
+                    commentElement.classList.add('card', 'mt-2', 'small-text');
+                    commentElement.innerHTML = `
+                        <div class="card-body">
+                            <p class="small-text">Author: ${comment.author.name}</p>
+                            <p class="card-text text-dark">${comment.text}</p>
+                        </div>
+                    `;
+                    commentsContainer.appendChild(commentElement);
+                });
+            })
+            .catch(error => console.error('Error to get post details:', error));
+    </script>
+    <footer class="mt-4 text-center">
+        <p>Esta aplicação tem finalidade de testar algumas funcionalidades e rotas da ApiRest disponível em
+            <a href="https://github.com/gabribn/API-Restful" target="_blank">GitHub</a>.
+        </p>
+    </footer>
+</body>
+
+</html>

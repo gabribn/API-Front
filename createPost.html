@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="bootstrap/bootstrap.min.css">
+    <title>Create Post</title>
+    <style>
+        .container {
+            margin-top: 50px;
+        }
+
+        .form-container {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+            aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="index.html">Home</a>
+                </li>
+            </ul>
+            <form id="search-form" class="form-inline my-2 my-lg-0 d-flex">
+
+            </form>
+        </div>
+    </nav>
+    <div class="container">
+        <h2 class="text-center">Create Post</h2>
+        <div class="form-container">
+            <form id="create-post-form">
+                <div class="form-group">
+                    <label for="name">Name:</label>
+                    <input type="text" class="form-control" id="name" name="name" required>
+                </div>
+                <div class="form-group">
+                    <label for="email">Email:</label>
+                    <input type="email" class="form-control" id="email" name="email" required>
+                </div>
+                <div class="form-group">
+                    <label for="postTitle">Post Title:</label>
+                    <input type="text" class="form-control" id="postTitle" name="postTitle" required>
+                </div>
+                <div class="form-group">
+                    <label for="postBody">Post Body:</label>
+                    <textarea class="form-control" id="postBody" name="postBody" rows="5" required></textarea>
+                </div>
+                <button type="button" class="btn btn-primary mt-2" onclick="validateForm()">Submit Post</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+        crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+    <script>
+        function validateForm() {
+            var name = document.getElementById('name').value;
+            var email = document.getElementById('email').value;
+            var postTitle = document.getElementById('postTitle').value;
+            var postBody = document.getElementById('postBody').value;
+
+            if (name === '' || email === '' || postTitle === '' || postBody === '') {
+                alert('Por favor, preencha todos os campos do formulário.');
+                return false;
+            }
+            submitPost();
+        }
+
+
+
+        function submitPost() {
+            const name = document.getElementById('name').value;
+            const email = document.getElementById('email').value;
+            const postTitle = document.getElementById('postTitle').value;
+            const postBody = document.getElementById('postBody').value;
+
+            const postData = {
+                "title": postTitle,
+                "body": postBody,
+                "author": {
+                    "id": "",
+                    "name": name
+                },
+            };
+
+            fetch('https://api-lxwa.onrender.com/posts', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(postData),
+            })
+
+            redirectToCreatePost();
+            function redirectToCreatePost() {
+                window.location.href = 'index.html';
+            }
+        }
+    </script>
+    <footer class="mt-4 text-center">
+        <p>Esta aplicação tem finalidade de testar algumas funcionalidades e rotas da ApiRest disponível em
+            <a href="https://github.com/gabribn/API-Restful" target="_blank">GitHub</a>.
+        </p>
+    </footer>
+</body>
+
+</html>
