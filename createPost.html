@@ -105,8 +105,14 @@
                 },
                 body: JSON.stringify(postData),
             })
+                .then(data => {
+                    console.log('Post submitted successfully:', data);
+                    redirectToCreatePost();
+                })
+                .catch(error => {
+                    console.error('Error submitting post:', error);
+                });
 
-            redirectToCreatePost();
             function redirectToCreatePost() {
                 window.location.href = 'index.html';
             }
